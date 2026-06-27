@@ -1,0 +1,5 @@
+file_name,column_name,data_type,row_count,null_count,null_percentage,duplicate_count,unqiue_count,samples_values
+products,product_id,int64,49688,0,0.0,0,49688,"1,2,3,4,5"
+products,product_name,object,49688,0,0.0,0,49688,"Chocolate Sandwich Cookies,All-Seasons Salt,Robust Golden Unsweetened Oolong Tea,Smart Ones Classic Favorites Mini Rigatoni With Vodka Cream Sauce,Green Chile Anytime Sauce"
+products,aisle_id,int64,49688,0,0.0,49554,134,"61,104,94,38,5"
+products,department_id,int64,49688,0,0.0,49667,21,"19,13,7,1,11"

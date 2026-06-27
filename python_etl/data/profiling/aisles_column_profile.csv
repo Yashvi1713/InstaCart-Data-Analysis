@@ -1,0 +1,3 @@
+file_name,column_name,data_type,row_count,null_count,null_percentage,duplicate_count,unqiue_count,samples_values
+aisles,aisle_id,int64,134,0,0.0,0,134,"1,2,3,4,5"
+aisles,aisle,object,134,0,0.0,0,134,"prepared soups salads,specialty cheeses,energy granola bars,instant foods,marinades meat preparation"

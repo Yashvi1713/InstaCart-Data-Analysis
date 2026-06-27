@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+dataenv/
+venv/
+.env/
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Logs
+logs/*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python cache
+.pytest_cache/
+
+# Build files
+build/
+dist/
+
+# Environment files
+.env
+
+# Snowflake credentials (future)
+config/secrets.yaml
+config/*.envpython_etl/data/raw/*.csv
+python_etl/data/raw/*.csv

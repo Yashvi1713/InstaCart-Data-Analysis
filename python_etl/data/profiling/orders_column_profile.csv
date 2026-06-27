@@ -1,0 +1,8 @@
+file_name,column_name,data_type,row_count,null_count,null_percentage,duplicate_count,unqiue_count,samples_values
+orders,order_id,int64,3421083,0,0.0,0,3421083,"2539329,2398795,473747,2254736,431534"
+orders,user_id,int64,3421083,0,0.0,3214874,206209,"1,2,3,4,5"
+orders,eval_set,object,3421083,0,0.0,3421080,3,"prior,train,test"
+orders,order_number,int64,3421083,0,0.0,3420983,100,"1,2,3,4,5"
+orders,order_dow,int64,3421083,0,0.0,3421076,7,"2,3,4,1,5"
+orders,order_hour_of_day,int64,3421083,0,0.0,3421059,24,"8,7,12,15,9"
+orders,days_since_prior_order,float64,3421083,206209,6.03,3421051,31,"15.0,21.0,29.0,28.0,19.0"

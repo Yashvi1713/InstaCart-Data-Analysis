@@ -1,0 +1,5 @@
+file_name,column_name,data_type,row_count,null_count,null_percentage,duplicate_count,unqiue_count,samples_values
+order_products__train,order_id,int64,1384617,0,0.0,1253408,131209,"1,36,38,96,98"
+order_products__train,product_id,int64,1384617,0,0.0,1345494,39123,"49302,11109,10246,49683,43633"
+order_products__train,add_to_cart_order,int64,1384617,0,0.0,1384537,80,"1,2,3,4,5"
+order_products__train,reordered,int64,1384617,0,0.0,1384615,2,"1,0"
