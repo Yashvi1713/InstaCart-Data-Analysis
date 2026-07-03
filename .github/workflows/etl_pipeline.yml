@@ -1,0 +1,60 @@
+name: Instacart ETL Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-etl-pipeline:
+    runs-on: ubuntu-latest
+
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy kaggle
+
+      - name: Create data folders
+        run: |
+          mkdir -p python_etl/data/raw
+          mkdir -p python_etl/data/profiling
+          mkdir -p python_etl/data/validation
+          mkdir -p python_etl/data/cleaned
+          mkdir -p python_etl/data/curated
+          mkdir -p logs
+
+      - name: Download Instacart dataset from Kaggle
+        run: |
+          kaggle competitions download -c instacart-market-basket-analysis -p python_etl/data/raw
+          unzip python_etl/data/raw/instacart-market-basket-analysis.zip -d python_etl/data/raw
+          unzip -o "python_etl/data/raw/*.zip" -d python_etl/data/raw || true
+          ls -lh python_etl/data/raw
+
+      - name: Run master ETL pipeline
+        run: |
+          python -m python_etl.pipeline.run_pipeline
+
+      - name: Upload ETL outputs as GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: etl-output-files
+          path: |
+            python_etl/data/profiling/
+            python_etl/data/validation/
+            python_etl/data/cleaned/
+            python_etl/data/curated/
+            logs/
