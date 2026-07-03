@@ -30,6 +30,11 @@ dist/
 # Environment files
 .env
 
+# Data files
+python_etl/data/cleaned/*.csv
+python_etl/data/curated/*.csv
+python_etl/data/cleaning/*.csv
+
 # Snowflake credentials (future)
 config/secrets.yaml
 config/*.envpython_etl/data/raw/*.csv
