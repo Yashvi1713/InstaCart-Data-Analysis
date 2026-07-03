@@ -32,22 +32,26 @@ jobs:
           mkdir -p python_etl/data/raw
           mkdir -p python_etl/data/profiling
           mkdir -p python_etl/data/validation
+          mkdir -p python_etl/data/cleaning
           mkdir -p python_etl/data/cleaned
           mkdir -p python_etl/data/curated
           mkdir -p logs
 
       - name: Download Instacart dataset from Kaggle
         run: |
-          kaggle competitions download -c instacart-market-basket-analysis -p python_etl/data/raw
-          unzip -o python_etl/data/raw/instacart-market-basket-analysis.zip -d python_etl/data/raw
-          unzip -o "python_etl/data/raw/*.zip" -d python_etl/data/raw || true
-          ls -lh python_etl/data/raw
+          kaggle datasets download \
+            -d yasserh/instacart-online-grocery-basket-analysis-dataset \
+            -p python_etl/data/raw
+
+          cd python_etl/data/raw
+          unzip -o "*.zip"
+          rm *.zip
 
       - name: Run master ETL pipeline
         run: |
           python -m python_etl.pipeline.run_pipeline
 
-      - name: Upload ETL outputs as GitHub artifact
+      - name: Upload ETL outputs
         uses: actions/upload-artifact@v4
         with:
           name: etl-output-files
