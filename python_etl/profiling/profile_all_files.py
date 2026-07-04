@@ -1,11 +1,8 @@
 import pandas as pd
-from pathlib import Path
 
+from config.settings import PROFILING_DATA_PATH, RAW_DATA_PATH, RAW_FILES
 from python_etl.profiling.profiler_utils import (generate_column_profile, generate_dataset_summary, save_profile_reports)
 from python_etl.utils.logger import setup_logger
-
-RAW_DATA_PATH = Path("python_etl/data/raw")
-PROFILE_OUTPUT_PATH = Path("python_etl/data/profiling")
 
 logger = setup_logger()
 
@@ -21,7 +18,7 @@ def process_file(file_path):
 
         summary_df = generate_dataset_summary(df, file_name)
 
-        save_profile_reports(column_profile_df, summary_df, PROFILE_OUTPUT_PATH, file_name) 
+        save_profile_reports(column_profile_df, summary_df, PROFILING_DATA_PATH, file_name) 
 
         logger.info(f"Profiling completed for: {file_name}")     
 
@@ -29,18 +26,19 @@ def process_file(file_path):
         logger.error(f"Failed processing {file_name}: {str(e)}")
 
 def main():
-    raw_path = Path(RAW_DATA_PATH)
+    raw_path = RAW_DATA_PATH
 
     if not raw_path.exists():
         logger.error("Raw data directory does not exist")
         print("ERROR: data/raw directory not found")
         return
 
-    csv_files = list(raw_path.glob("*.csv"))
+    csv_files = [raw_path / file_name for file_name in RAW_FILES.values()]
+    missing_files = [file_path for file_path in csv_files if not file_path.exists()]
 
-    if not csv_files:
-        logger.warning("No CSV files found")
-        print("No CSV files found in data/raw")
+    if missing_files:
+        logger.error(f"Missing raw files for profiling: {missing_files}")
+        print("ERROR: required raw files missing")
         return
     
     logger.info(f"{len(csv_files)} CSV files detected")
@@ -54,5 +52,3 @@ def main():
 if __name__ == "__main__":
 
     main()
-
-

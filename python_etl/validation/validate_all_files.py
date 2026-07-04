@@ -1,6 +1,6 @@
 import pandas as pd
-from pathlib import Path
 
+from config.settings import RAW_DATA_PATH, RAW_FILES, VALIDATION_DATA_PATH
 from python_etl.utils.logger import setup_logger
 from python_etl.validation.validation_rules import (
     VALIDATION_RULES,
@@ -22,10 +22,6 @@ from python_etl.validation.validation_utils import (
     check_referential_integrity,
 )
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "raw"
-VALIDATION_OUTPUT_PATH = PROJECT_ROOT / "python_etl" / "data" / "validation"
 
 SUMMARY_COLUMNS = [
     "table_name",
@@ -55,7 +51,7 @@ def load_raw_files():
     tables = {}
 
     for table_name in REQUIRED_TABLES:
-        csv_file = RAW_DATA_PATH / f"{table_name}.csv"
+        csv_file = RAW_DATA_PATH / RAW_FILES[table_name]
         if not csv_file.exists():
             raise FileNotFoundError(f"Required raw file not found: {csv_file}")
 
@@ -205,18 +201,18 @@ def run_referential_integrity_validations(tables):
 
 
 def save_validation_reports(summary_results, failed_records):
-    VALIDATION_OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
+    VALIDATION_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
     summary_df = pd.DataFrame(summary_results, columns=SUMMARY_COLUMNS)
     failed_df = pd.DataFrame(failed_records, columns=FAILED_RECORD_COLUMNS)
 
     summary_df.to_csv(
-        VALIDATION_OUTPUT_PATH / "validation_summary.csv",
+        VALIDATION_DATA_PATH / "validation_summary.csv",
         index=False,
     )
 
     failed_df.to_csv(
-        VALIDATION_OUTPUT_PATH / "validation_failed_records.csv",
+        VALIDATION_DATA_PATH / "validation_failed_records.csv",
         index=False,
     )
 

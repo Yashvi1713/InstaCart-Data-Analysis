@@ -1,7 +1,13 @@
 import pandas as pd
-from pathlib import Path
 from datetime import datetime
 
+from config.settings import (
+    CLEANED_DATA_PATH,
+    CLEANED_FILES,
+    CLEANING_DATA_PATH,
+    RAW_DATA_PATH,
+    RAW_FILES,
+)
 from python_etl.utils.logger import setup_logger
 from python_etl.cleaning.cleaning_rules import CLEANING_RULES
 from python_etl.cleaning.cleaning_utils import (
@@ -13,16 +19,10 @@ from python_etl.cleaning.cleaning_utils import (
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-RAW_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "raw"
-CLEANED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "cleaned"
-CLEANING_REPORT_PATH = PROJECT_ROOT / "python_etl" / "data" / "cleaning"
-
 logger = setup_logger("cleaning_pipeline.log")
 
 
-def clean_table(file_path: Path) -> dict:
+def clean_table(file_path) -> dict:
     table_name = file_path.stem
 
     logger.info(f"Starting cleaning for {table_name}")
@@ -50,7 +50,7 @@ def clean_table(file_path: Path) -> dict:
 
     CLEANED_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
-    output_file = CLEANED_DATA_PATH / f"{table_name}_cleaned.csv"
+    output_file = CLEANED_DATA_PATH / CLEANED_FILES[table_name]
     df.to_csv(output_file, index=False)
 
     logger.info(f"Completed cleaning for {table_name}")
@@ -71,14 +71,15 @@ def main():
     logger.info("Starting cleaning pipeline")
 
     try:
-        CLEANING_REPORT_PATH.mkdir(parents=True, exist_ok=True)
+        CLEANING_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
         cleaning_summary = []
 
-        csv_files = list(RAW_DATA_PATH.glob("*.csv"))
+        csv_files = [RAW_DATA_PATH / file_name for file_name in RAW_FILES.values()]
+        missing_files = [file_path for file_path in csv_files if not file_path.exists()]
 
-        if not csv_files:
-            raise FileNotFoundError(f"No CSV files found for cleaning in {RAW_DATA_PATH}")
+        if missing_files:
+            raise FileNotFoundError(f"Missing raw files for cleaning: {missing_files}")
 
         for file_path in csv_files:
             summary = clean_table(file_path)
@@ -87,7 +88,7 @@ def main():
         summary_df = pd.DataFrame(cleaning_summary)
 
         summary_df.to_csv(
-            CLEANING_REPORT_PATH / "cleaning_summary.csv",
+            CLEANING_DATA_PATH / "cleaning_summary.csv",
             index=False,
         )
 

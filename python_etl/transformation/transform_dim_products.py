@@ -1,14 +1,9 @@
 import pandas as pd
-from pathlib import Path
 from datetime import datetime
 
+from config.settings import CLEANED_DATA_PATH, CLEANED_FILES, CURATED_DATA_PATH, CURATED_FILES
 from python_etl.utils.logger import setup_logger
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-CLEANED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "cleaned"
-CURATED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "curated"
 
 logger = setup_logger("transformation_pipeline.log")
 
@@ -16,9 +11,9 @@ logger = setup_logger("transformation_pipeline.log")
 def build_dim_products() -> pd.DataFrame:
     logger.info("Starting dim_products transformation")
 
-    products_df = pd.read_csv(CLEANED_DATA_PATH / "products_cleaned.csv")
-    aisles_df = pd.read_csv(CLEANED_DATA_PATH / "aisles_cleaned.csv")
-    departments_df = pd.read_csv(CLEANED_DATA_PATH / "departments_cleaned.csv")
+    products_df = pd.read_csv(CLEANED_DATA_PATH / CLEANED_FILES["products"])
+    aisles_df = pd.read_csv(CLEANED_DATA_PATH / CLEANED_FILES["aisles"])
+    departments_df = pd.read_csv(CLEANED_DATA_PATH / CLEANED_FILES["departments"])
 
     dim_products_df = products_df.merge(
         aisles_df,
@@ -51,7 +46,7 @@ def build_dim_products() -> pd.DataFrame:
 def save_dim_products(dim_products_df: pd.DataFrame) -> None:
     CURATED_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
-    output_path = CURATED_DATA_PATH / "dim_products.csv"
+    output_path = CURATED_DATA_PATH / CURATED_FILES["dim_products"]
 
     dim_products_df.to_csv(output_path, index=False)
 

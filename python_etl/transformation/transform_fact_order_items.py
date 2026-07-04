@@ -1,14 +1,9 @@
 import pandas as pd
-from pathlib import Path
 from datetime import datetime
 
+from config.settings import CLEANED_DATA_PATH, CLEANED_FILES, CURATED_DATA_PATH, CURATED_FILES
 from python_etl.utils.logger import setup_logger
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-CLEANED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "cleaned"
-CURATED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "curated"
 
 logger = setup_logger("transformation_pipeline.log")
 
@@ -16,9 +11,9 @@ logger = setup_logger("transformation_pipeline.log")
 def build_fact_order_items() -> pd.DataFrame:
     logger.info("Starting fact_order_items transformation")
 
-    prior_path = CLEANED_DATA_PATH / "order_products__prior_cleaned.csv"
-    train_path = CLEANED_DATA_PATH / "order_products__train_cleaned.csv"
-    orders_path = CLEANED_DATA_PATH / "orders_cleaned.csv"
+    prior_path = CLEANED_DATA_PATH / CLEANED_FILES["order_products__prior"]
+    train_path = CLEANED_DATA_PATH / CLEANED_FILES["order_products__train"]
+    orders_path = CLEANED_DATA_PATH / CLEANED_FILES["orders"]
 
     prior_df = pd.read_csv(prior_path)
     train_df = pd.read_csv(train_path)
@@ -78,7 +73,7 @@ def build_fact_order_items() -> pd.DataFrame:
 def save_fact_order_items(fact_df: pd.DataFrame) -> None:
     CURATED_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
-    output_path = CURATED_DATA_PATH / "fact_order_items.csv"
+    output_path = CURATED_DATA_PATH / CURATED_FILES["fact_order_items"]
 
     fact_df.to_csv(output_path, index=False)
 

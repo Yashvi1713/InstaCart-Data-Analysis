@@ -1,14 +1,9 @@
 import pandas as pd
-from pathlib import Path
 from datetime import datetime
 
+from config.settings import CLEANED_DATA_PATH, CLEANED_FILES, CURATED_DATA_PATH, CURATED_FILES
 from python_etl.utils.logger import setup_logger
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-CLEANED_DATA_PATH = PROJECT_ROOT /"python_etl" / "data" / "cleaned"
-CURATED_DATA_PATH = PROJECT_ROOT / "python_etl" / "data" / "curated"
 
 logger = setup_logger("transformation_pipeline.log")
 
@@ -16,7 +11,7 @@ logger = setup_logger("transformation_pipeline.log")
 def build_dim_users() -> pd.DataFrame:
     logger.info("Starting dim_users transformation")
 
-    orders_df = pd.read_csv(CLEANED_DATA_PATH / "orders_cleaned.csv")
+    orders_df = pd.read_csv(CLEANED_DATA_PATH / CLEANED_FILES["orders"])
 
     dim_users_df = (
         orders_df
@@ -46,7 +41,7 @@ def build_dim_users() -> pd.DataFrame:
 def save_dim_users(dim_users_df: pd.DataFrame) -> None:
     CURATED_DATA_PATH.mkdir(parents=True, exist_ok=True)
 
-    output_path = CURATED_DATA_PATH / "dim_users.csv"
+    output_path = CURATED_DATA_PATH / CURATED_FILES["dim_users"]
 
     dim_users_df.to_csv(output_path, index=False)
 
