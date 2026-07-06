@@ -1,0 +1,12 @@
+check_name,table_name,expected_value,actual_value,status
+row_count_match,DIM_PRODUCTS,49688,49688,PASS
+row_count_match,DIM_USERS,206209,206209,PASS
+row_count_match,DIM_ORDERS,3421083,3421083,PASS
+row_count_match,FACT_ORDER_ITEMS,33819106,33819106,PASS
+primary_key_uniqueness,DIM_PRODUCTS,0,0,PASS
+primary_key_uniqueness,DIM_USERS,0,0,PASS
+primary_key_uniqueness,DIM_ORDERS,0,0,PASS
+fact_product_id_exists_in_dim_products,FACT_ORDER_ITEMS,0,0,PASS
+fact_order_id_exists_in_dim_orders,FACT_ORDER_ITEMS,0,0,PASS
+fact_user_id_exists_in_dim_users,FACT_ORDER_ITEMS,0,0,PASS
+reordered_allowed_values,FACT_ORDER_ITEMS,0,0,PASS
